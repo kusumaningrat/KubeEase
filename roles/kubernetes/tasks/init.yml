@@ -1,6 +1,6 @@
 ---
 - name: Preparation
-  hosts: k8s-master0[0]
+  hosts: control-plane[0]
   become: yes
   tasks:
     - name: Create kubernetes cluster config file

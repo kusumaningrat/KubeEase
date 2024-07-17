@@ -1,5 +1,5 @@
 - name: Preparation
-  hosts: all
+  hosts: control-plane[1], workers
   become: yes
   tasks:
     - name: Join Control Plane Node
