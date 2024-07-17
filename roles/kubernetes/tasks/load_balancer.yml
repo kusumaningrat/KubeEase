@@ -1,0 +1,20 @@
+- name: Conigure Load Balancer with Haproxy
+  hosts: lb
+  become: yes
+  tasks:
+    - name: Configure haproxy
+      template:
+        src: haproxy.conf.j2
+        dest: /etc/haproxy/haproxy.cfg
+      notify:
+        - Restart haproxy service
+
+    - name: Configure keepalived
+      template:
+        src: keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+      notify:
+        - Restart keepalived service
+      
+    - name: Check haproxy configuration
+      shell: haproxy -c -V -f /etc/haproxy/haproxy.cfg

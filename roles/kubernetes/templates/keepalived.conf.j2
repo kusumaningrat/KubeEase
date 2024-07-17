@@ -1,0 +1,30 @@
+vrrp_script check_haproxy {
+    script "killall -0 haproxy"
+    interval 2 
+    weight 2
+}
+
+vrrp_instance VI_1 {
+    state MASTER 
+    interface ens3
+    virtual_router_id 255
+    priority 102 
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass Y2xvdWRlcnMK
+    }
+    {%-for name,ip in lb.ip.items() %}
+    unicast_src_ip {{ ip.lb1 }}
+    unicast_peer {
+        {{ ip.lb2 }}
+   }
+    virtual_ipaddress {
+        {{ ip.vip }}
+    }
+    {% endfor %}
+    
+    track_script {
+        check_haproxy
+    }
+}

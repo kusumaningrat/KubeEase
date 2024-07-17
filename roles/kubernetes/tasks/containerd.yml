@@ -1,0 +1,37 @@
+---
+- name: Preparation
+  hosts: clusters
+  become: yes
+  tasks:
+    - name: Update the all packages
+      apt:
+        update_cache: yes
+        state: latest
+
+    - name: Install containerd service
+      apt:
+        name: containerd
+        state: latest
+
+    - name: Ensure directory containerd is exist
+      file:
+        path: /etc/containerd
+        state: directory
+        mode: '0755'
+
+    - name: Generate containerd config
+      shell: containerd config default | sudo tee /etc/containerd/config.toml
+
+    - name: Create containerd configuration
+      template:
+        src: containerd.conf.j2
+        dest: /etc/modules-load.d/containerd.conf
+      notify:
+        - Restart containerd service
+
+    - name: Load modules
+      shell: 
+        cmd: "modprobe {{ item }}"
+      loop:
+        - overlay
+        - br_netfilter

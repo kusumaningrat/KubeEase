@@ -1,0 +1,36 @@
+---
+# vars file for kubernetes
+master:
+  hostname: 
+   - k8s-master01
+   - k8s-master02
+  ip:
+   - 172.16.0.10
+   - 172.16.0.11
+  cluster:
+    kubernetes_version: "1.29.6"
+    control_plane_endpoint: "172.16.0.20:6443"
+    pod_subnet: "192.168.0.0/16"
+
+lb:
+  ip:
+    lb1: 172.16.0.14
+    lb2: 172.16.0.15
+    vip: 172.16.0.20
+
+packages:
+  prerequisite:
+    - curl
+    - apt-transport-https
+    - gpg
+  
+  kubernetes:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+gpg_key:
+  src: "https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key"
+
+repository:
+  kubernetes: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
