@@ -1,4 +1,12 @@
 ---
+- name: Install haproxy and keepalived packages
+  apt:
+    name: {{ item }}
+    state: present
+  with_items:
+    - haproxy
+    - keepalived
+
 - name: Configure haproxy
   template:
     src: haproxy.conf.j2
