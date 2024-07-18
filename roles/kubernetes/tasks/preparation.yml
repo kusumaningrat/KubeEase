@@ -49,12 +49,11 @@
   shell: swapoff -a
   
 - name: Comment out swap entry in /etc/fstab
-  replace:
+  lineinfile:
     path: /etc/fstab
     regexp: '^(.*\sswap\s.*)$'
-    replace: '#\1'
+    line: '#\1'
     validate: '/bin/cat %s'
-    state: present
 
 - name: Install kubernetes packages
   apt:
