@@ -1,6 +1,40 @@
 ---
-- name: Kubernetes Setup Automation
-  hosts: all
+- name: Preparation
+  hosts: clusters
   become: true
-  roles:
-    - kubernetes
+  tasks:
+    - include_role:
+        name: kubernetes
+        tasks_from: preparation.yml
+
+- name: Configure Load Balancer with Haproxy
+  hosts: lb
+  become: true
+  tasks:
+    - include_role:
+        name: kubernetes
+        tasks_from: load_balancer.yml
+
+- name: Install and Configure Containerd
+  hosts: clusters
+  become: true
+  tasks:
+    - include_role:
+        name: kubernetes
+        tasks_from: containerd.yml
+
+- name: Init Kubernetes Clusters on master01
+  hosts: control-plane[0]
+  become: true
+  tasks:
+    - include_role:
+        name: kubernetes
+        tasks_from: init.yml
+
+- name: Join another control-plane and all workers
+  hosts: control-plane[1], workers
+  become: true
+  tasks:
+    - include_role:
+        name: kubernetes
+        tasks_from: join.yml

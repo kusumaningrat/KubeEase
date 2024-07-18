@@ -1,6 +1,6 @@
 ---
-- include_tasks: preparation.yml
-- include_tasks: load_balancer.yml
-- include_tasks: containerd.yml
-- include_tasks: init.yml
-- include_tasks: join.yml
+- import_playbook: preparation.yml
+- import_playbook: load_balancer.yml
+- import_playbook: containerd.yml
+- import_playbook: init.yml
+- import_playbook: join.yml
