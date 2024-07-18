@@ -53,8 +53,6 @@
     path: /etc/fstab
     regexp: '^(.*\sswap\s.*)$'
     replace: '#\1'
-    backup: yes
-    backup_suffix: '.bak'
     validate: '/bin/cat %s'
     state: present
 
