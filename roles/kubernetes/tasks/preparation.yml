@@ -24,6 +24,7 @@
   apt_key:
     url: "{{ gpg_key.src }}"
     state: present
+    keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 - name: Configure Kubernetes repository
   apt_repository:
