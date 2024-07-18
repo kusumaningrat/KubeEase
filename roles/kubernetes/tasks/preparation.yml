@@ -1,74 +1,70 @@
 ---
-- name: Preparation
-  hosts: clusters
-  become: yes
-  tasks:
-    - name: Configure host mapping
-      template:
-        src: templates/hosts.j2
-        dest: "{{ ansible_user_dir }}/hosts"
-      
-    - name: Set the hostname
-      hostname:
-        name: "{{ hostname[inventory_hostname] }}"
+- name: Configure host mapping
+  template:
+    src: templates/hosts.j2
+    dest: "{{ ansible_user_dir }}/hosts"
+  
+- name: Set the hostname
+  hostname:
+    name: "{{ hostname[inventory_hostname] }}"
 
-    - name: Install prerequisite packages
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop: "{{ packages.prerequisite }}"
+- name: Install prerequisite packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages.prerequisite }}"
 
-    - name: Ensure /etc/apt/keyrings directory exists
-      file:
-        path: /etc/apt/keyrings
-        state: directory
-        mode: '0755'
+- name: Ensure /etc/apt/keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
 
-    - name: Add Kubernetes official gpg key
-      apt_key:
-        url: "{{ gpg_key.src }}"
-        state: present
+- name: Add Kubernetes official gpg key
+  apt_key:
+    url: "{{ gpg_key.src }}"
+    state: present
 
-    - name: Configure Kubernetes repository
-      apt_repository:
-        repo: "{{ repository.kubernetes }}"
-        state: present
-        filename: kubernetes.list
-        mode: 0600
-      
-    - name: Update apt package index
-      apt:
-        update_cache: yes
+- name: Configure Kubernetes repository
+  apt_repository:
+    repo: "{{ repository.kubernetes }}"
+    state: present
+    filename: kubernetes.list
+    mode: 0600
+  
+- name: Update apt package index
+  apt:
+    update_cache: yes
 
-    - name: Set system configuration for Kubernetes networking
-      template:
-        src: kubernetes-cri.conf.j2
-        dest: /etc/sysctl.d/99-kubernetes-cri.conf 
+- name: Set system configuration for Kubernetes networking
+  template:
+    src: kubernetes-cri.conf.j2
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf 
 
-    - name: Apply the system settings
-      shell: sysctl --sytem
+- name: Apply the system settings
+  shell: sysctl --sytem
 
-    - name: Disable swap
-      shell: swapoff -a
-      
-    - name: Comment out swap entry in /etc/fstab
-      ansible.builtin.replace:
-        path: /etc/fstab
-        regexp: '^(.*\sswap\s.*)$'
-        replace: '#\1'
-        backup: yes
-        backup_suffix: '.bak'
-        validate: '/bin/cat %s'
-        state: present
+- name: Disable swap
+  shell: swapoff -a
+  
+- name: Comment out swap entry in /etc/fstab
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^(.*\sswap\s.*)$'
+    replace: '#\1'
+    backup: yes
+    backup_suffix: '.bak'
+    validate: '/bin/cat %s'
+    state: present
 
-    - name: Install kubernetes packages
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop: "{{ packages.kubernetes }}"
+- name: Install kubernetes packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages.kubernetes }}"
 
-    - name: Hold the packages
-      dpkg_selections:
-        name: "{{ item }}"
-        selection: hold
-      loop: "{{ packages.kubernetes }}"
+- name: Hold the packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop: "{{ packages.kubernetes }}"

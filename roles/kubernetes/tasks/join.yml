@@ -1,13 +1,10 @@
-- name: Preparation
-  hosts: control-plane[1], workers
-  become: yes
-  tasks:
-    - name: Join Control Plane Node
-      shell: |
-        kubeadm join {{ vip }}:6443 --token {{ token }} --discovery-token-ca-cert-hash {{ ca_cert_hash }} --control-plane --certificate-key {{ cert_key }}
-      when: "'control-plane' in group_names"
+---
+- name: Join Control Plane Node
+  shell: |
+    kubeadm join {{ vip }}:6443 --token {{ token }} --discovery-token-ca-cert-hash {{ ca_cert_hash }} --control-plane --certificate-key {{ cert_key }}
+  when: "'control_plane' in group_names"
 
-    - name: Join Worker Node
-      shell: |
-        kubeadm join {{ vip }}:6443 --token {{ token }} --discovery-token-ca-cert-hash {{ ca_cert_hash }}
-      when: "'workers' in group_names"
+- name: Join Worker Node
+  shell: |
+    kubeadm join {{ vip }}:6443 --token {{ token }} --discovery-token-ca-cert-hash {{ ca_cert_hash }}
+  when: "'workers' in group_names"
