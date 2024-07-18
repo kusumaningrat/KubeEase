@@ -49,7 +49,7 @@
   shell: swapoff -a
   
 - name: Comment out swap entry in /etc/fstab
-  ansible.builtin.replace:
+  replace:
     path: /etc/fstab
     regexp: '^(.*\sswap\s.*)$'
     replace: '#\1'
