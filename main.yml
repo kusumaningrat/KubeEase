@@ -1,4 +1,8 @@
 ---
+- name: Get the hosts facts
+  hosts: all
+  tasks: []
+
 - name: Preparation
   hosts: clusters
   become: true
