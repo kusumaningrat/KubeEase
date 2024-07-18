@@ -1,5 +1,6 @@
 ---
 - name: Kubernetes Setup Automation
   hosts: all
+  become: true
   roles:
     - kubernetes
