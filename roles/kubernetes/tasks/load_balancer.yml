@@ -1,7 +1,7 @@
 ---
 - name: Install haproxy and keepalived packages
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   loop:
     - haproxy
