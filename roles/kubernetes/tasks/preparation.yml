@@ -6,7 +6,7 @@
   
 - name: Set the hostname
   hostname:
-    name: "{{ hostname[inventory_hostname] }}"
+    name: "{{ hostvars[i]['ansible_facts']['hostname']"
 
 - name: Install prerequisite packages
   apt:
