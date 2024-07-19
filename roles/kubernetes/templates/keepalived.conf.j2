@@ -14,12 +14,12 @@ vrrp_instance VI_1 {
         auth_type PASS
         auth_pass Y2xvdWRlcnMK
     }
-    {% if inventory_hostname = 'lb01' %}
+    {% if inventory_hostname == 'lb01' %}
     unicast_src_ip {{ lb.ip.lb01 }}
     unicast_peer {
         {{ lb.ip.lb02 }}
     }
-    {% elif inventory_hostname = 'lb02' %}
+    {% elif inventory_hostname == 'lb02' %}
     unicast_src_ip {{ lb.ip.lb02 }}
     unicast_peer {
         {{ lb.ip.lb01 }}
