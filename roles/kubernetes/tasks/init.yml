@@ -60,4 +60,4 @@
     dest: /tmp/join_info.yaml
 
 - name: Setup calico for kubernetes networking
-  shell: kubectl apply -f https://docs.projectcalico.org/v3.17/manifests/calico.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
