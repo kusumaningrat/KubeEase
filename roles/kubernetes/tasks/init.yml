@@ -30,6 +30,7 @@
     mode: 0644
     owner: root
     group: root
+    remote_src: yes
 
 - name: Create a directory for kubeconfig (non-root user)
   file:
@@ -37,14 +38,6 @@
     path: /home/{{ ansible_user_id }}/.kube/
     mode: 0775
   when: ansible_user_id != 'root'
-
-- name: Setup kubeconfig for root user
-  copy:
-    src: /etc/kubernetes/admin.conf
-    dest: /home/{{ ansible_user_id }}/.kube/config
-    mode: 0644
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
 
 - name: Get the token for joining the nodes
   shell: kubeadm token create --print-join-command
