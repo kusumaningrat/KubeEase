@@ -28,7 +28,7 @@
         tasks_from: containerd.yml
 
 - name: Init Kubernetes Clusters on master01
-  hosts: control-plane[0]
+  hosts: control_plane[0]
   become: true
   tasks:
     - include_role:
@@ -36,7 +36,7 @@
         tasks_from: init.yml
 
 - name: Join another control-plane and all workers
-  hosts: control-plane[1], workers
+  hosts: control_plane[1], workers
   become: true
   tasks:
     - include_role:
