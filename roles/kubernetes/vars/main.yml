@@ -5,18 +5,18 @@ master:
    - k8s-master01
    - k8s-master02
   ip:
-   - 172.16.0.10
-   - 172.16.0.11
+   - 10.20.0.10
+   - 10.20.0.11
   cluster:
     kubernetes_version: "1.29.6"
-    control_plane_endpoint: "172.16.0.20:6443"
+    control_plane_endpoint: "10.20.0.20:6443"
     pod_subnet: "192.168.0.0/16"
 
 lb:
   ip:
-    lb01: 172.16.0.14
-    lb02: 172.16.0.15
-    vip: 172.16.0.20
+    lb01: 10.20.0.14
+    lb02: 10.20.0.15
+    vip: 10.20.0.20
 
 packages:
   prerequisite:

@@ -47,3 +47,4 @@ backend kubernetes-master-nodes
     {% for name, ip in master.hostname | zip(master.ip) %}
 server {{ ip }}:6443 check fall 3 rise 2
     {% endfor %}
+    
