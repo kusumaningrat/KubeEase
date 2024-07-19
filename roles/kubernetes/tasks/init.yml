@@ -17,26 +17,6 @@
   set_fact:
     cert_key: "{{ kubeadm_init_result.stdout | regex_search('certificate key: (.*)', '\\1') }}"
 
-- name: Get the token for joining the nodes
-  shell: kubeadm token create --print-join-command
-  register: kubernetes_join_command
-
-- debug:
-    var: kubernetes_join_command
-
-- name: Extract token and hash from join command
-  set_fact:
-    token: "{{ kubernetes_join_command.stdout | regex_search('--token ([^ ]+)', '\\1') }}"
-    ca_cert_hash: "{{ kubernetes_join_command.stdout | regex_search('--discovery-token-ca-cert-hash ([^ ]+)', '\\1') }}"
-
-- name: Save join information to a file
-  copy:
-    content: |
-      token: {{ token }}
-      ca_cert_hash: {{ ca_cert_hash }}
-      cert_key: {{ cert_key }}
-    dest: /tmp/join_info.yaml
-
 - name: Create a directory for kubeconfig (root user)
   file:
     state: directory
@@ -65,6 +45,26 @@
     mode: 0644
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
+
+- name: Get the token for joining the nodes
+  shell: kubeadm token create --print-join-command
+  register: kubernetes_join_command
+
+- debug:
+    var: kubernetes_join_command
+
+- name: Extract token and hash from join command
+  set_fact:
+    token: "{{ kubernetes_join_command.stdout | regex_search('--token ([^ ]+)', '\\1') }}"
+    ca_cert_hash: "{{ kubernetes_join_command.stdout | regex_search('--discovery-token-ca-cert-hash ([^ ]+)', '\\1') }}"
+
+- name: Save join information to a file
+  copy:
+    content: |
+      token: {{ token }}
+      ca_cert_hash: {{ ca_cert_hash }}
+      cert_key: {{ cert_key }}
+    dest: /tmp/join_info.yaml
 
 - name: Setup calico for kubernetes networking
   shell: kubectl apply -f https://docs.projectcalico.org/v3.17/manifests/calico.yaml
