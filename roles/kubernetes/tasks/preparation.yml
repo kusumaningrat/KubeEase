@@ -43,7 +43,7 @@
     dest: /etc/sysctl.d/99-kubernetes-cri.conf 
 
 - name: Apply the system settings
-  shell: sysctl --sytem
+  shell: sysctl --sytem && sysctl -p
 
 - name: Disable swap
   shell: swapoff -a
