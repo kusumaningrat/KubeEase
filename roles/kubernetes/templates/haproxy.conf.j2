@@ -43,6 +43,6 @@ backend kubernetes-master-nodes
     mode tcp
     balance roundrobin
     option tcp-check
-    {%- for node in master %}
-    server {{ node.ip }}:6443 check fall 3 rise 2
+    {%- for name, ip in master.hostname | zip(master.ip) %}
+    server {{ ip }}:6443 check fall 3 rise 2
     {% endfor %}
