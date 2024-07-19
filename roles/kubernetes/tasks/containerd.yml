@@ -14,20 +14,8 @@
     path: /etc/containerd
     state: directory
     mode: '0755'
-
-- name: Create containerd configuration
-  template:
-    src: containerd.conf.j2
-    dest: /etc/modules-load.d/containerd.conf
-  notify:
-    - Restart containerd service
-
-- name: Load modules
-  shell: 
-    cmd: "modprobe {{ item }}"
-  loop:
-    - overlay
-    - br_netfilter
     
 - name: Generate containerd config
   shell: containerd config default | sudo tee /etc/containerd/config.toml
+  notify:
+  - Restart containerd service

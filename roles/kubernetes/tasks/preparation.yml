@@ -37,6 +37,18 @@
   apt:
     update_cache: yes
 
+- name: Create containerd configuration
+  template:
+    src: containerd.conf.j2
+    dest: /etc/modules-load.d/containerd.conf
+
+- name: Load modules
+  shell: 
+    cmd: "modprobe {{ item }}"
+  loop:
+    - overlay
+    - br_netfilter
+
 - name: Set system configuration for Kubernetes networking
   template:
     src: kubernetes-cri.conf.j2
