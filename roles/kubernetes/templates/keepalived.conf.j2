@@ -6,7 +6,7 @@ vrrp_script check_haproxy {
 
 vrrp_instance VI_1 {
     state MASTER 
-    interface ens3
+    interface {{ ansible_default_ipv4.interface }}
     virtual_router_id 255
     priority 102 
     advert_int 1

@@ -34,7 +34,7 @@ defaults
 	errorfile 504 /etc/haproxy/errors/504.http
 
 frontend kubernetes
-    bind *:443
+    bind *:6443
     option tcplog
     mode tcp
     default_backend kubernetes-master-nodes
