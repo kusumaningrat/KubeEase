@@ -11,11 +11,11 @@
   register: kubeadm_init_result
 
 - debug:
-    var: kubeadm_result.stdout_lines
+    var: kubeadm_init_result.stdout_lines
 
 - name: Get the certificate key from the init output
   set_fact:
-    cert_key: "{{ init_output.stdout | regex_search('certificate key: (.*)', '\\1') }}"
+    cert_key: "{{ kubeadm_init_result.stdout | regex_search('certificate key: (.*)', '\\1') }}"
 
 - name: Get the token for joining the nodes
   shell: kubeadm token create --print-join-command
