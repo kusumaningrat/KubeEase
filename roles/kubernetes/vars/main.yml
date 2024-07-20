@@ -2,8 +2,8 @@
 # vars file for kubernetes
 master:
   hostname: 
-   - k8s-master01
-   - k8s-master02
+   - master01
+   - master02
   ip:
    - 10.20.0.16
    - 10.20.0.8
@@ -11,6 +11,7 @@ master:
     kubernetes_version: "1.29.6"
     control_plane_endpoint: "10.20.0.21:6443"
     pod_subnet: "192.168.0.0/16"
+
 
 lb:
   ip:

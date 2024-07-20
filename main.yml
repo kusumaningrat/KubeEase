@@ -36,9 +36,9 @@
         tasks_from: init.yml
 
 - name: Join worker nodes
-  hosts: workers
+  hosts: control_plane[1]
   become: true
   tasks:
     - include_role:
         name: kubernetes
-        tasks_from: join.yml
+        tasks_from: join_control-plane.yml

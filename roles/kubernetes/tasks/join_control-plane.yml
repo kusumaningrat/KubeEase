@@ -1,0 +1,6 @@
+---
+- name: Fetch the control-plane join command from master01
+  fetch:
+    src: /tmp/kubernetes_join_command_control_plane
+    dest: /tmp/
+    flat: yes

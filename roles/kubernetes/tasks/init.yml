@@ -17,6 +17,20 @@
   set_fact:
     cert_key: "{{ kubeadm_init_result.stdout | regex_search('certificate key: (.*)', '\\1') }}"
 
+- name: Get the token for joining the control-plane nodes
+  become: yes
+  shell: kubeadm token create --print-join-command --certificate-key {{ cert_key }}
+  register: kubernetes_join_command_control_plane
+
+- debug:
+    msg: "{{ kubernetes_join_command_control_plane.stdout }}"
+
+- name: Copy control-plane join command to local
+  copy:
+    content: "{{ kubernetes_join_command_control_plane.stdout }}"
+    dest: "/tmp/kubernetes_join_command_control_plane"
+    mode: '0644'
+
 - name: Create a directory for kubeconfig (root user)
   file:
     state: directory
@@ -39,34 +53,18 @@
     mode: 0775
   when: ansible_user_id != 'root'
 
-# - name: Extract token and hash from join command
-#   set_fact:
-#     token: "{{ kubernetes_join_command.stdout | regex_search('--token ([^ ]+)', '\\1') }}"
-#     ca_cert_hash: "{{ kubernetes_join_command.stdout | regex_search('--discovery-token-ca-cert-hash ([^ ]+)', '\\1') }}"
+- name: Get the token for joining the worker nodes
+  shell: kubeadm token create --print-join-command
+  register: kubernetes_join_command
 
-# - name: Save join information to a file
-#   copy:
-#     content: |
-#       token: {{ token }}
-#       ca_cert_hash: {{ ca_cert_hash }}
-#       cert_key: {{ cert_key }}
-#     dest: /tmp/join_info.yml
+- debug:
+   msg: "{{ kubernetes_join_command.stdout }}"
 
-# - name: Fetch join information to controller
-#   fetch:
-#     src: /tmp/join_info.yml
-#     dest: /tmp/join_info.yml
-#     flat: yes
-#   delegate_to: localhost
-#   when: inventory_hostname == groups['control_plane'][0]
-
-# - name: Distribute join information to other control planes
-#   copy:
-#     src: /tmp/join_info.yml
-#     dest: /tmp/join_info.yml
-#   delegate_to: "{{ item }}"
-#   with_items: "{{ groups['control_plane'][1:] }}"
-#   when: inventory_hostname == groups['control_plane'][0]
+- name: Copy workers join command to local
+  copy:
+    content: "{{ kubernetes_join_command_workers.stdout }}"
+    dest: "/tmp/kubernetes_join_command_workers"
+    mode: '0644'
 
 - name: Download Calico manifest
   get_url:
