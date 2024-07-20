@@ -1,13 +1,7 @@
 ---
-- name: Fetch join information to controller
-  fetch:
-    src: /tmp/join_info.yml
-    dest: /tmp/join_info_{{ inventory_hostname }}.yml
-    flat: yes
-
 - name: Load join information
   include_vars:
-    file: /tmp/join_info_{{ inventory_hostname }}.yml
+    file: /tmp/join_info.yml
 
 - name: Join Control Plane Node
   shell: |

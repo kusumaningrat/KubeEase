@@ -58,6 +58,23 @@
       ca_cert_hash: {{ ca_cert_hash }}
       cert_key: {{ cert_key }}
     dest: /tmp/join_info.yml
+  when: inventory_hostname == groups['control_plane'][0]
+
+- name: Fetch join information to controller
+  fetch:
+    src: /tmp/join_info.yml
+    dest: /tmp/join_info.yml
+    flat: yes
+  delegate_to: localhost
+  when: inventory_hostname == groups['control_plane'][0]
+
+- name: Distribute join information to other control planes
+  copy:
+    src: /tmp/join_info.yml
+    dest: /tmp/join_info.yml
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['control_plane'][1:] }}"
+  when: inventory_hostname == groups['control_plane'][0]
 
 - name: Download Calico manifest
   get_url:
