@@ -59,10 +59,10 @@
 
 - name: Get the token for joining the worker nodes
   shell: kubeadm token create --print-join-command
-  register: kubernetes_join_command
+  register: kubernetes_join_command_workers
 
 - debug:
-   msg: "{{ kubernetes_join_command.stdout }}"
+   msg: "{{ kubernetes_join_command_workers.stdout }}"
 
 - name: Copy workers join command to local
   copy:
