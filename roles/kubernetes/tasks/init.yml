@@ -57,7 +57,7 @@
       token: {{ token }}
       ca_cert_hash: {{ ca_cert_hash }}
       cert_key: {{ cert_key }}
-    dest: /tmp/join_info.yaml
+    dest: /tmp/join_info.yml
 
 - name: Download Calico manifest
   get_url:
