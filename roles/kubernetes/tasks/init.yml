@@ -66,5 +66,3 @@
 
 - name: Setup calico for kubernetes networking
   shell: sed -i 's/policy\/v1beta1/policy\/v1/g' /tmp/calico.yml && kubectl apply -f /tmp/calico.yml
-  args:
-    warn: false
