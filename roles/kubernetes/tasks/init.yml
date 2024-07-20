@@ -75,6 +75,7 @@
     src: "/tmp/kubernetes_join_command_workers"
     dest: "/tmp/kubernetes_join_command_workers"
     mode: '0644'
+    remote_src: yes
   with_items: "{{ groups['workers'] }}"
 
 - name: Download Calico manifest
