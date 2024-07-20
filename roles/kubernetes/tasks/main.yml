@@ -3,4 +3,4 @@
 - import_playbook: load_balancer.yml
 - import_playbook: containerd.yml
 - import_playbook: init.yml
-- import_playbook: join.yml
+- import_playbook: join_workers.yml
