@@ -15,7 +15,10 @@
 
 - name: Get the certificate key from the init output
   set_fact:
-    cert_key: "{{ kubeadm_init_result.stdout | regex_search('certificate key: (.*)', '\\1') }}"
+    cert_key: "{{ kubeadm_init_result.stdout | regex_search('certificate key: ([a-f0-9]+)', '\\1') }}"
+
+- name: Debug cert_key
+    msg: "Certificate Key: {{ cert_key }}"
 
 - name: Get the token for joining the control-plane nodes
   become: yes
