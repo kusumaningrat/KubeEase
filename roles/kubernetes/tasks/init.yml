@@ -13,27 +13,27 @@
 - debug:
     var: kubeadm_init_result.stdout_lines
 
-- name: Get the certificate key from the init output
-  set_fact:
-    cert_key: "{{ kubeadm_init_result.stdout | regex_search('--certificate-key ([a-f0-9a-fA-F]+)', '\\1') }}"
+# - name: Get the certificate key from the init output
+#   set_fact:
+#     cert_key: "{{ kubeadm_init_result.stdout | regex_search('--certificate-key ([a-f0-9a-fA-F]+)', '\\1') }}"
 
-- name: Debug cert_key
-  debug:
-    msg: "{{ cert_key }}"
+# - name: Debug cert_key
+#   debug:
+#     msg: "{{ cert_key }}"
 
-- name: Get the token for joining the control-plane nodes
-  become: yes
-  shell: kubeadm token create --print-join-command --certificate-key {{ cert_key }}
-  register: kubernetes_join_command_control_plane
+# - name: Get the token for joining the control-plane nodes
+#   become: yes
+#   shell: kubeadm token create --print-join-command --certificate-key {{ cert_key }}
+#   register: kubernetes_join_command_control_plane
 
-- debug:
-    msg: "{{ kubernetes_join_command_control_plane.stdout }}"
+# - debug:
+#     msg: "{{ kubernetes_join_command_control_plane.stdout }}"
 
-- name: Copy control-plane join command to local
-  copy:
-    content: "{{ kubernetes_join_command_control_plane.stdout }}"
-    dest: "/tmp/kubernetes_join_command_control_plane"
-    mode: '0644'
+# - name: Copy control-plane join command to local
+#   copy:
+#     content: "{{ kubernetes_join_command_control_plane.stdout }}"
+#     dest: "/tmp/kubernetes_join_command_control_plane"
+#     mode: '0644'
 
 - name: Create a directory for kubeconfig (root user)
   file:
@@ -66,9 +66,16 @@
 
 - name: Copy workers join command to local
   copy:
-    content: "{{ kubernetes_join_command_workers.stdout }}"
+    content: "{{ kubernetes_join_command_workers.stdout_lines[0] }}"
     dest: "/tmp/kubernetes_join_command_workers"
     mode: '0644'
+
+- name: Copy join command to worker nodes
+  copy:
+    src: "/tmp/kubernetes_join_command_workers"
+    dest: "/tmp/kubernetes_join_command_workers"
+    mode: '0644'
+  with_items: "{{ groups['workers'] }}"
 
 - name: Download Calico manifest
   get_url:
