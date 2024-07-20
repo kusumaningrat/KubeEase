@@ -59,5 +59,12 @@
       cert_key: {{ cert_key }}
     dest: /tmp/join_info.yaml
 
+- name: Download Calico manifest
+  get_url:
+    url: https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
+    dest: /tmp/calico.yml
+
 - name: Setup calico for kubernetes networking
-  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
+  shell: sed -i 's/policy\/v1beta1/policy\/v1/g' /tmp/calico.yml && kubectl apply -f /tmp/calico.yml
+  args:
+    warn: false
