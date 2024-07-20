@@ -35,7 +35,7 @@
         name: kubernetes
         tasks_from: init.yml
 
-- name: Join another control-plane and all workers
+- name: Join worker nodes
   hosts: workers
   become: true
   tasks:
