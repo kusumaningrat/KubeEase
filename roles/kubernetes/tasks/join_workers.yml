@@ -1,4 +1,4 @@
+---
 - name: Join worker nodes to the cluster
-  shell: "{{ lookup('file', '/tmp/kubernetes_join_command_workers') }}"
+  shell: "ls -l "
   become: yes
-  with_items: "{{ groups['workers'] }}"
