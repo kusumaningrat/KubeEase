@@ -56,7 +56,10 @@
 - name: Set system configuration for Kubernetes networking
   template:
     src: kubernetes-cri.conf.j2
-    dest: /etc/sysctl.d/99-kubernetes-cri.conf 
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+
+- name: Configure proc sys for Kubernetes networking
+  shell: echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables && echo 1 > /proc/sys/net/ipv4/ip_forward
 
 - name: Apply the system settings
   shell: sysctl --sytem && sysctl -p
