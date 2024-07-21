@@ -12,7 +12,6 @@ master:
     control_plane_endpoint: "10.20.0.21:6443"
     pod_subnet: "192.168.0.0/16"
 
-
 lb:
   ip:
     lb01: 10.20.0.17
