@@ -3,6 +3,14 @@
   hosts: all
   tasks: []
 
+- name: Join worker nodes
+  hosts: workers
+  become: true
+  tasks:
+    - include_role:
+        name: kubernetes
+        tasks_from: join_workers.yml
+
 - name: Preparation
   hosts: clusters
   become: true
@@ -34,11 +42,3 @@
     - include_role:
         name: kubernetes
         tasks_from: init.yml
-
-- name: Join worker nodes
-  hosts: workers
-  become: true
-  tasks:
-    - include_role:
-        name: kubernetes
-        tasks_from: join_workers.yml
