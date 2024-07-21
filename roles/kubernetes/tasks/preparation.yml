@@ -8,6 +8,10 @@
   hostname:
     name: "{{ hostvars[inventory_hostname]['hostname'] }}"
 
+- name: Update apt package index
+  apt:
+    update_cache: yes
+
 - name: Install prerequisite packages
   apt:
     name: "{{ item }}"
